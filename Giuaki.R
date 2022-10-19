@@ -7,8 +7,8 @@ View(equipment)
 View(add_data)
 # show all colname in dataset
 colnames(equipment)
-#tom tat tap du lieu
 
+#tom tat tap du lieu
 summary(equipment)
 
 a1 <-sum(equipment$helicopter) / sum(equipment$tank+equipment$helicopter+equipment$drone + equipment$naval.ship  ) * 100
@@ -19,7 +19,7 @@ a3<-sum(equipment$drone) / sum(equipment$tank+equipment$helicopter+equipment$dro
 
 a4<-sum(equipment$naval.ship) / sum(equipment$tank+equipment$helicopter+equipment$drone + equipment$naval.ship ) * 100
 
-a5 <-sum(equipment$helicopter)*1
+a5 <-sum(equipment$helicopter)
 a6<-sum(equipment$tank)
 a7<-sum(equipment$drone)
 a8<-sum(equipment$naval.ship)

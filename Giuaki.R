@@ -1,16 +1,56 @@
 #1
-# import read data set
+# import read dataset
+
 equipment <- read.csv(file = 'C:/Users/acer/OneDrive/Documents/R-ChuyenDe/giuaki/equipment_Ukraine_Russia_War.csv')
 add_data <- read.csv(file = 'C:/Users/acer/OneDrive/Documents/R-ChuyenDe/giuaki/add_data.csv')
 View(equipment)
 View(add_data)
 # show all colname in dataset
 colnames(equipment)
+#tom tat tap du lieu
+
 summary(equipment)
-#colSums(na.omit(equipment))
+
+a1 <-sum(equipment$helicopter) / sum(equipment$tank+equipment$helicopter+equipment$drone + equipment$naval.ship  ) * 100
+
+a2<-sum(equipment$tank) / sum(equipment$tank+equipment$helicopter+equipment$drone + equipment$naval.ship ) * 100
+
+a3<-sum(equipment$drone) / sum(equipment$tank+equipment$helicopter+equipment$drone + equipment$naval.ship ) * 100
+
+a4<-sum(equipment$naval.ship) / sum(equipment$tank+equipment$helicopter+equipment$drone + equipment$naval.ship ) * 100
+
+a5 <-sum(equipment$helicopter)*1
+a6<-sum(equipment$tank)
+a7<-sum(equipment$drone)
+a8<-sum(equipment$naval.ship)
+
+
+data= matrix(c(a1, a2, a3, a4), ncol=4, byrow=TRUE)
+colnames(data) <- c('tank','helicopter','drone','ship')
+
+quanity<- c(a5, a6,a7,a8)
+data1 <- rbind(data, quanity)
+data1
+rownames(data) <- c('percent')
+
+final=as.table(data)
+final
+
+
+head(df)
+#tinh tong cac row ko day du
 # show number of row and col
 nrow(equipment)
-ncol(equipment)
+  ncol(equipment)
+
+#min(equipment$tank)
+
+#tinh trung binh cot bat ki
+#median(equipment$tank)
+#mean(equipment$tank)
+
+
+#as.numeric as.character
 
 #add lib
 library(dplyr)
@@ -20,7 +60,7 @@ library(dplyr)
 #day: thứ tự ngày từ ngày 1...đến ngày cuối
 #aircraft: số lượng phi cơ sử dụng
 #helicopter: số lượng máy bay trực thăng sử dụng
-#tank: Armored Personnel Carrier
+#tank: so lương xe tang
 #APC:Armored Personnel Carrier: số lượng xe bọc thép sử dụng
 #field artillery: số lượng pháo dã chiến sử dụng
 #MRL:Multiple Rocket Launcher: số lượng hệ thống bệ phóng tên lửa sử dụng
@@ -37,16 +77,18 @@ library(dplyr)
 
 
 #3
-#replace all NA by 100
+#replace all NA by 0
 equipment[is.na(equipment)] <- "0"
 View(equipment)
 
 #remove all rows contain NA
 # careful sẽ xóa hết data luôn nếu row nào cx có NA.
+#gsub() thay the 
 equipment <- as.data.frame(apply(equipment, 2, function(x) gsub("\\s+", "", x)))
 equipment[equipment == ""] <- NA
 #tail() la show ra n rows cuoi cung
 tail(equipment)
+#na.omit loai bo tat ca cac truogn hop ko day du (NA)
 equipment <- na.omit(equipment)
 tail(equipment)
 
@@ -59,8 +101,9 @@ mergeDataset <- merge(add_data, equipment, by = "date", all.x=TRUE,all.y=TRUE)
 # by merge two dataset by use common columns  "date"
 #all.x=TRUE, all.y=TRUE: To retain all values of the first dataset and second dataset
 
-# complete.cases() return a logical vector indicating which cases are complete
-mergeDataset <- mergeDataset[complete.cases(mergeDataset), ] # Keep only complete rows
+# complete.cases() return a vector logic cho biet cases nao complete
+# Keep only complete rows
+mergeDataset <- mergeDataset[complete.cases(mergeDataset), ] 
 View(mergeDataset)
 
 #5
@@ -70,7 +113,7 @@ top5died <- head(mergeDataset[order(mergeDataset$died, decreasing = TRUE),], 5)
 top5died[c(2, 18)]
 
 # find top 5 area most area by injured quantity
-top5injured <- head(mergeDataset[order(mergeDataset$died, decreasing = TRUE),], 5)
+top5injured <- head(mergeDataset[order(mergeDataset$injured, decreasing = TRUE),], 5)
 top5injured[c(3, 18)]
 
 #(head(): show ra n rows dau tien)
@@ -94,10 +137,10 @@ sum(mergeDataset$died)
 sum(mergeDataset$injured)
 
 #select any col 
-mergeDataset%>% select(tank)
+mergeDataset%>%select(helicopter)
 
 #total helicopter used
-sum(mergeDataset$helicopter)
+
 
 #total aircraft used
 sum(mergeDataset$aircraft)
@@ -106,8 +149,12 @@ sum(mergeDataset$aircraft)
 mergeDataset <- mutate(mergeDataset, total = died + injured)
 
 # area died more than 10000 people
-mergeDataset[mergeDataset$died >= 10001, c(2, 18)]
+mergeDataset[mergeDataset$died >= 10001, c(1,2, 18)]
 
-# area injured more than 10000 people
-mergeDataset[mergeDataset$injured >= 100001, c(3, 18)]
+# area injured more than 100000 people
+mergeDataset[mergeDataset$injured >= 100001, c(1,3, 18)]
+
+#bieudo
+hist(mergeDataset$died)
+hist(mergeDataset$injured)
 
